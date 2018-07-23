@@ -4,56 +4,72 @@
       <v-layout column align-center>
         <img src="@/assets/logo.png" alt="Vuetify.js" class="mb-5">
         <form>
-          <v-text-field v-model="tipTotal" label="Tips" required></v-text-field>
+          <v-text-field v-model="totalTips" label="Total Tips" required outline></v-text-field>
         </form>
         <v-flex>
-          <user v-for="user in users" :key="user.id" v-bind:user="user"></user>
+          <Employees v-for="employee in employees" :key="employee.id" v-bind:employee="employee"></Employees>
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
-    <v-btn absolute dark fab bottom right color="blue" @click="addUser">
+    <v-btn absolute dark fab bottom right color="blue" @click="addEmployee">
       <v-icon>add</v-icon>
     </v-btn>
   </v-container>
 </template>
 
 <script>
-import User from '@/components/User'
+import Employees from '@/components/Employees'
 
 export default {
   components: {
-    User
+    Employees
   },
   data () {
     return {
-      tipTotal: 0,
-      hoursTotal: 0,
-      users: [
-        {
-          id: 1,
-          name: 'Towelie',
-          hours: 6,
-          tips: 0
-        },
-        {
-          id: 2,
-          name: 'Washcloth',
-          hours: 8,
-          tips: 0
-        }
-      ]
+      hoursTotal: 0
     }
   },
   methods: {
-    getUsers: function () {
-      console.log('Return user info here')
+    getEmployees: function () {
+      this.employees = [
+            {
+              id: 1,
+              name: 'Towelie',
+              hours: 6,
+              tips: 0
+            },
+            {
+              id: 2,
+              name: 'Washcloth',
+              hours: 8,
+              tips: 0
+            }
+          ]
     },    
-    addUser: function () {
+    addEmployee: function () {
       
     }
   },
   created() {
-    this.getUsers()
+    this.getEmployees()
+  },
+  computed: {
+    totalTips: {
+      get () {
+        return this.$store.state.totalTips
+      },
+      set (value) {
+        this.$store.commit('setTotalTips', value)
+      }
+    },
+    employees: {
+      get () {
+        return this.$store.state.employees
+      },
+      set (value) {
+        this.$store.commit('setEmployees', value)
+      }
+    }
   }
 }
 </script>

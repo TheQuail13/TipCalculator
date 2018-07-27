@@ -7,7 +7,7 @@
           <v-text-field v-model="totalTips" label="Total Tips" required outline></v-text-field>
         </form>
         <v-flex>
-          <Employees v-for="employee in employees" :key="employee.id" v-bind:employee="employee"></Employees>
+          <Employees v-for="(employee, index) in employees" :key="index" :employee="employee" :index="index"></Employees>
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
@@ -19,15 +19,11 @@
 
 <script>
 import Employees from '@/components/Employees'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     Employees
-  },
-  data () {
-    return {
-      hoursTotal: 0
-    }
   },
   methods: {
     getEmployees: function () {
@@ -35,23 +31,28 @@ export default {
             {
               id: 1,
               name: 'Towelie',
-              hours: 6,
+              hours: 0,
               tips: 0
             },
             {
               id: 2,
               name: 'Washcloth',
-              hours: 8,
+              hours: 0,
               tips: 0
             }
           ]
     },    
     addEmployee: function () {
       
-    }
-  },
-  created() {
-    this.getEmployees()
+    },
+    calculateTips: function () {
+      for (var i = 0; i < this.employees.length; i++) {
+        debugger
+          if (this.employees[i].hours > 0 && this.totalHours > 0 && this.totalTips > 0) {
+              this.employees[i].tips = (this.employees[i].hours/this.totalHours) * this.totalTips
+          }
+      }
+    },
   },
   computed: {
     totalTips: {
@@ -68,8 +69,22 @@ export default {
       },
       set (value) {
         this.$store.commit('setEmployees', value)
-      }
+      },
+    },
+    ...mapGetters([
+      'totalHours'
+    ])
+  },
+  watch: {
+    totalHours: {
+      handler: function () {
+        this.calculateTips()
+      },
+      deep: true
     }
+  },
+  created() {
+    this.getEmployees()
   }
 }
 </script>

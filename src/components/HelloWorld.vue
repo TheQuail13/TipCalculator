@@ -3,9 +3,15 @@
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <img src="@/assets/logo.png" alt="Vuetify.js" class="mb-5">
-        <form>
-          <v-text-field v-model="totalTips" label="Total Tips" required outline></v-text-field>
-        </form>
+        <v-layout row align-center>
+          <v-flex xs6>
+            <v-text-field v-model.number="totalTips" label="Total Tips" required outline></v-text-field>
+          </v-flex>
+          <v-spacer></v-spacer>
+          <v-flex xs6>
+            <v-text-field v-model.number="totalHours" label="Total Hours" required outline></v-text-field>
+          </v-flex>
+        </v-layout>
         <v-flex>
           <Employees v-for="(employee, index) in employees" :key="index" :employee="employee" :index="index"></Employees>
         </v-flex>
@@ -23,6 +29,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: {
+
     Employees
   },
   methods: {
@@ -43,7 +50,13 @@ export default {
           ]
     },    
     addEmployee: function () {
-      this.employees.push(this.$store.state.newEmployee)
+      var newEmployee = {
+        id: this.employees.length,
+        name: '',
+        hours: 0,
+        tips: 0
+      }
+      this.employees.push(newEmployee)
     },
     calculateTips: function () {
       for (var i = 0; i < this.employees.length; i++) {

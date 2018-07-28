@@ -10,8 +10,11 @@
                     <v-text-field v-model.number="employee.hours" @change="updateEmployeeList(employee, index)" label="Hours" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs3>
-                    <p>Tips: {{formatAsCurrency(employee.tips)}}</p>
+                    <p><strong>Tips: {{formatAsCurrency(employee.tips)}}</strong></p>
                 </v-flex>
+                <v-btn fab dark small color="pink" @click="deleteUser(index)">
+                    <v-icon dark>remove</v-icon>
+                </v-btn>
             </v-layout>
         </v-container>
     </v-layout>
@@ -41,6 +44,9 @@ export default {
 
             return formatter.format(value)
         },
+        deleteUser (index) {
+            this.$store.state.employees.splice(index, 1)
+        }
     }
 }
 </script>

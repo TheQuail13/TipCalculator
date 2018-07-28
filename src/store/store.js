@@ -6,13 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         totalTips: 150,
-        employees: [],
-        newEmployee: {
-            id: -1,
-            name: '',
-            hours: 0,
-            tips: 0
-        }
+        employees: []
     },
     getters: {
         totalHours(state) {
@@ -31,14 +25,7 @@ const store = new Vuex.Store({
         },
         setEmployees (state, payload) {
             state.employees = payload
-        },
-        // calculateTips (state, payload) {
-        //     for (var i = 0; i < state.employees.length; i++) {
-        //         if (state.employees[i].hours > 0 && this.totalHours > 0 && state.totalTips > 0) {
-        //             state.employees[i].tips = (state.employees[i].hours/this.totalHours) * state.totalTips
-        //         }
-        //     }
-        // }
+        }
     }
 })
 

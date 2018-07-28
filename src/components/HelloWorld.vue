@@ -11,7 +11,7 @@
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
-    <v-btn absolute dark fab bottom right color="blue" @click="addEmployee">
+    <v-btn dark fab fixed bottom right color="blue" @click="addEmployee">
       <v-icon>add</v-icon>
     </v-btn>
   </v-container>
@@ -43,11 +43,10 @@ export default {
           ]
     },    
     addEmployee: function () {
-      
+      this.employees.push(this.$store.state.newEmployee)
     },
     calculateTips: function () {
       for (var i = 0; i < this.employees.length; i++) {
-        debugger
           if (this.employees[i].hours > 0 && this.totalHours > 0 && this.totalTips > 0) {
               this.employees[i].tips = (this.employees[i].hours/this.totalHours) * this.totalTips
           }

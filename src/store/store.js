@@ -6,7 +6,13 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         totalTips: 150,
-        employees: []
+        employees: [],
+        newEmployee: {
+            id: -1,
+            name: '',
+            hours: 0,
+            tips: 0
+        }
     },
     getters: {
         totalHours(state) {

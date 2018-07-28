@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid grid-list-md text-xs-center>
     <v-slide-y-transition mode="out-in">
       <v-layout column align-center>
         <img src="@/assets/logo.png" alt="Vuetify.js" class="mb-5">
@@ -9,7 +9,8 @@
           </v-flex>
           <v-spacer></v-spacer>
           <v-flex xs6>
-            <v-text-field v-model.number="totalHours" label="Total Hours" required outline></v-text-field>
+            <!-- <v-text-field v-model.number="totalHours" label="Total Hours" required outline></v-text-field> -->
+            <p><Strong>Total Hours: {{totalHours}}</strong></p>
           </v-flex>
         </v-layout>
         <v-flex>
@@ -81,6 +82,11 @@ export default {
         this.calculateTips()
       },
       deep: true
+    },
+    totalTips: {
+      handler: function () {
+        this.calculateTips()
+      }
     }
   },
   created() {

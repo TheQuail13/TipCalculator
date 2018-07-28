@@ -6,12 +6,8 @@ import router from './router'
 import Vuetify from 'vuetify'
 import store from './store/store'
 import 'vuetify/dist/vuetify.min.css'
-// import secrets from './secrets.js'
-
-// console.log(secrets.ApiKeyTest)
 
 Vue.use(Vuetify)
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

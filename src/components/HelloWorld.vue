@@ -26,29 +26,13 @@
 <script>
 import Employees from '@/components/Employees'
 import { mapGetters } from 'vuex'
+import db from '../firebaseInit.js'
 
 export default {
   components: {
-
     Employees
   },
   methods: {
-    getEmployees: function () {
-      this.employees = [
-            {
-              id: 1,
-              name: 'Towelie',
-              hours: 0,
-              tips: 0
-            },
-            {
-              id: 2,
-              name: 'Washcloth',
-              hours: 0,
-              tips: 0
-            }
-          ]
-    },    
     addEmployee: function () {
       var newEmployee = {
         id: this.employees.length,
@@ -57,6 +41,10 @@ export default {
         tips: 0
       }
       this.employees.push(newEmployee)
+
+      // db.collection('employees').add({
+      //   employees: this.employees[0]
+      // })
     },
     calculateTips: function () {
       for (var i = 0; i < this.employees.length; i++) {
@@ -96,7 +84,11 @@ export default {
     }
   },
   created() {
-    this.getEmployees()
+    db.collection('employees').get().then((query) => {
+      query.forEach((doc) => {
+        this.employees.push(doc.data())
+      })
+    })
   }
 }
 </script>

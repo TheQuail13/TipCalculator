@@ -7,10 +7,10 @@
                     <v-text-field v-model="employee.name" label="Name" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs3>
-                    <v-text-field v-model.number="employee.hours" @change="updateEmployeeList(employee, index)" label="Hours" clearable></v-text-field>
+                    <v-text-field v-model.number="hours" @change="updateEmployeeList(employee, index)" label="Hours" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs3>
-                    <p><strong>Tips: {{formatAsCurrency(employee.tips)}}</strong></p>
+                    <p><strong>Tips: {{formatAsCurrency(tips)}}</strong></p>
                 </v-flex>
                 <v-btn fab dark small color="pink" @click="deleteUser(index)">
                     <v-icon dark>remove</v-icon>
@@ -23,17 +23,29 @@
 
 <script>
 export default {
-    name: 'Employees',
     props: ['employee', 'index'],
+    data () {
+        return {
+            hours: 0,
+            tips: 0,
+            employeeObject: {}
+        }
+    },
     methods: {
         calculateTipsPerEmployee(employeesHours, totalHours, totalTips) {
             if (employeesHours > 0 && totalHours > 0 && totalTips > 0) {
                 this.employee.tips = (employeesHours/totalHours) * totalTips
             }
         },
-        updateEmployeeList(employee, index) {                
-            this.$store.state.employees.splice(index, 1, employee)
-            this.calculateTipsPerEmployee(employee.hours, this.$store.getters.totalHours, this.$store.state.totalTips)
+        updateEmployeeList(employee, index) {      
+            this.employeeObject = {
+                name: this.employee.name,
+                hours: this.hours,
+                tips: this.tips
+            }        
+            this.$store.state.workDayEmployeeInfoList.splice(index, 1, this.employeeObject)
+            console.log(this.$store.state.workDayEmployeeInfoList)
+            // this.calculateTipsPerEmployee(employee.hours, this.$store.getters.totalHours, this.$store.state.totalTips)
         },
         formatAsCurrency (value) {
             var formatter = new Intl.NumberFormat('en-us', {
@@ -47,6 +59,6 @@ export default {
         deleteUser (index) {
             this.$store.state.employees.splice(index, 1)
         }
-    }
+    },
 }
 </script>

@@ -6,15 +6,16 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         totalTips: 150,
-        employees: []
+        employees: [],
+        workDayEmployeeInfoList: []
     },
     getters: {
         totalHours(state) {
-            return state.employees.reduce((total, emp) => total + emp.hours, 0);
+            return state.workDayEmployeeInfoList.reduce((total, emp) => total + emp.hours, 0)
         },
-        totalCalculatedTips(state) {
-            return state.employees.reduce((total, emp) => total + emp.tips, 0);
-        }
+        // totalCalculatedTips(state) {
+        //     return state.employees.map(employee => employee.employees).reduce((total, emp) => total + emp.tips, 0);
+        // }
     },
     mutations: {
         setTotalTips (state, payload) {
@@ -24,8 +25,8 @@ const store = new Vuex.Store({
             state.totalHours = payload
         },
         setEmployees (state, payload) {
-            state.employees = payload
-        }
+            state.employees.push(payload)
+        },
     }
 })
 

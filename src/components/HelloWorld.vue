@@ -18,7 +18,7 @@
       </v-layout>
     </v-slide-y-transition>
     <v-snackbar v-model="showSnackbar" :timeout="2000" color="success" top>{{ snackbarText }}</v-snackbar>
-    <v-speed-dial fixed bottom right slide-y-reverse-transition>
+    <v-speed-dial fixed bottom left slide-y-reverse-transition>
       <v-btn slot="activator" color="blue darken-2" dark fab>
         <v-icon>add</v-icon>
         <v-icon>close</v-icon>

@@ -3,16 +3,16 @@
     <v-layout row wrap align-center>
         <v-container>
             <v-layout align-center>
-                <v-flex xs6>
+                <v-flex xs5>
                     <v-text-field v-model="employee.name" label="Name" clearable></v-text-field>
                 </v-flex>
-                <v-flex xs3>
+                <v-flex xs4>
                     <v-text-field v-model.number="employee.hours" @change="updateEmployeeData(employee.hours, index)" label="Hours" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs3>
                     <p><strong>Tips: {{formatAsCurrency(employee.tips)}}</strong></p>
                 </v-flex>
-                <v-btn fab dark small color="pink" @click="deleteUser(index)">
+                <v-btn class="button-override" fab dark small color="pink" @click="deleteUser(index)">
                     <v-icon dark>remove</v-icon>
                 </v-btn>
             </v-layout>
@@ -50,3 +50,10 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+    .button-override {
+        height: 35px;
+        width: 35px;
+    }
+</style>

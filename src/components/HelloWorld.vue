@@ -17,12 +17,10 @@
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
-
     <v-snackbar v-model="showSnackbar" :timeout="2000" color="success" top>{{ snackbarText }}</v-snackbar>
-
     <v-speed-dial fixed bottom right slide-y-reverse-transition>
       <v-btn slot="activator" color="blue darken-2" dark fab>
-        <v-icon>account_circle</v-icon>
+        <v-icon>add</v-icon>
         <v-icon>close</v-icon>
       </v-btn>
       <v-btn fab dark small color="green" @click="saveWorkDay">

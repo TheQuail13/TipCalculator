@@ -13,3 +13,9 @@ yarn-error.log*
 *.sln
 
 src/secrets\.js
+
+\.firebaserc
+
+firebase\.json
+
+public/index\.html

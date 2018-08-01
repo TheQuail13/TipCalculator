@@ -17,6 +17,9 @@
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
+
+    <v-snackbar v-model="showSnackbar" :timeout="2000" color="success" top>{{ snackbarText }}</v-snackbar>
+
     <v-speed-dial fixed bottom right slide-y-reverse-transition>
       <v-btn slot="activator" color="blue darken-2" dark fab>
         <v-icon>account_circle</v-icon>
@@ -47,6 +50,8 @@ export default {
   data () {
     return {
       showModal: false,
+      showSnackbar: false,
+      snackbarText: '',
       employeeObject: {
         name: '',
         hours: 0,
@@ -55,15 +60,6 @@ export default {
     }
   },
   methods: {
-    // addEmployee: function () {
-    //   var newEmployee = {
-    //     id: this.employees.length,
-    //     name: '',
-    //     hours: 0,
-    //     tips: 0
-    //   }
-    //   this.employees.push(newEmployee)
-    // },
     calculateTips: function () {
       for (var i = 0; i < this.workDayEmployeeInfoList.length; i++) {
           if (this.workDayEmployeeInfoList[i].hours > 0 && this.totalHours > 0 && this.totalTips > 0) {
@@ -77,16 +73,20 @@ export default {
       db.collection('employees').add({
         id: newId,
         name: name
-      }).then(() =>
+      }).then(() => {
+        this.showSnackbar = true
+        this.snackbarText = 'Employee Successfully Added!'
         this.getEmployeeList()
-      )
+      })
     },
     deleteEmployee: function () {
-      //logic here
+      // logic here
     },
     getEmployeeList: function () {
+      // clear array
       this.workDayEmployeeInfoList.length = 0
 
+      // get data from Firestore and populate store
       db.collection('employees').get().then((query) => {
         query.forEach((doc) => {
           this.employeeObject = {
@@ -98,6 +98,12 @@ export default {
           this.$store.commit('setWorkDayEmployeeInfoList', this.employeeObject)
         })
       })
+    },
+    saveWorkDay: function () {
+      db.collection('completedDays').set({
+        date: new Date(),
+        employees: this.workDayEmployeeInfoList
+      }).then()
     }
   },
   computed: {

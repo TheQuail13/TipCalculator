@@ -10,12 +10,16 @@ const store = new Vuex.Store({
         workDayEmployeeInfoList: []
     },
     getters: {
-        totalHours(state) {
+        totalHours (state) {
             return state.workDayEmployeeInfoList.reduce((total, emp) => total + emp.hours, 0)
         },
-        // totalCalculatedTips(state) {
-        //     return state.employees.map(employee => employee.employees).reduce((total, emp) => total + emp.tips, 0);
-        // }
+        totalCalculatedTips (state) {
+            return state.workDayEmployeeInfoList.reduce((total, emp) => total + emp.tips, 0)
+        },
+        maxEmployeeId (state) {
+            var map = state.employees.map((emp) => { return emp.id })
+            return Math.max.apply(Math, map)
+        }
     },
     mutations: {
         setTotalTips (state, payload) {
@@ -27,6 +31,9 @@ const store = new Vuex.Store({
         setEmployees (state, payload) {
             state.employees.push(payload)
         },
+        setWorkDayEmployeeInfoList (state, payload) {
+            state.workDayEmployeeInfoList.push(payload)
+        }
     }
 })
 

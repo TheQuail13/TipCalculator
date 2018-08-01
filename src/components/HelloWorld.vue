@@ -13,7 +13,7 @@
           </v-flex>
         </v-layout>
         <v-flex>
-          <Employees v-for="(employee, index) in employees" :key="index" :employee="employee" :index="index"></Employees>
+          <Employees v-for="(employee, index) in this.workDayEmployeeInfoList" :key="index" :employee="employee" :index="index"></Employees>
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
@@ -46,7 +46,12 @@ export default {
   },
   data () {
     return {
-      showModal: false
+      showModal: false,
+      employeeObject: {
+        name: '',
+        hours: 0,
+        tips: 0
+      }
     }
   },
   methods: {
@@ -60,14 +65,14 @@ export default {
     //   this.employees.push(newEmployee)
     // },
     calculateTips: function () {
-      for (var i = 0; i < this.employees.length; i++) {
-          if (this.employees[i].hours > 0 && this.totalHours > 0 && this.totalTips > 0) {
-              this.employees[i].tips = (this.employees[i].hours/this.totalHours) * this.totalTips
+      for (var i = 0; i < this.workDayEmployeeInfoList.length; i++) {
+          if (this.workDayEmployeeInfoList[i].hours > 0 && this.totalHours > 0 && this.totalTips > 0) {
+              this.workDayEmployeeInfoList[i].tips = (this.workDayEmployeeInfoList[i].hours/this.totalHours) * this.totalTips
           }
       }
     },
     addEmployee: function (name) {
-      var newId = this.employees.length + 1
+      var newId = this.maxEmployeeId + 1
 
       db.collection('employees').add({
         id: newId,
@@ -80,11 +85,17 @@ export default {
       //logic here
     },
     getEmployeeList: function () {
-      this.employees.length = 0
+      this.workDayEmployeeInfoList.length = 0
 
       db.collection('employees').get().then((query) => {
         query.forEach((doc) => {
+          this.employeeObject = {
+            name: doc.data().name,
+            hours: 0,
+            tips: 0
+          }
           this.$store.commit('setEmployees', doc.data())
+          this.$store.commit('setWorkDayEmployeeInfoList', this.employeeObject)
         })
       })
     }
@@ -108,28 +119,36 @@ export default {
     },
     workDayEmployeeInfoList: {
       get () {
-        return this.$store.state.workDayEmployeeInfo
+        return this.$store.state.workDayEmployeeInfoList
       },
       set (value) {
-        this.$store.commit('setEmployees', value)
+        this.$store.commit('setWorkDayEmployeeInfoList', value)
       },
     },
     ...mapGetters([
-      'totalHours'
+      'totalHours',
+      'totalCalculatedTips',
+      'maxEmployeeId'
     ])
   },
   watch: {
-    // totalHours: {
-    //   handler: function () {
-    //     this.calculateTips()
-    //   },
-    //   deep: true
-    // },
-    // totalTips: {
-    //   handler: function () {
-    //     this.calculateTips()
-    //   }
-    // }
+    totalHours: {
+      handler: function () {
+        this.calculateTips()
+      },
+      deep: true
+    },
+    totalCalculatedTips: {
+      handler: function () {
+        this.calculateTips()
+      }
+    },
+    workDayEmployeeInfoList: {
+      handler: function () {
+        this.calculateTips()
+      },
+      deep: true
+    }
   },
   created() {
     this.getEmployeeList()

@@ -25,9 +25,9 @@
         <v-icon>account_circle</v-icon>
         <v-icon>close</v-icon>
       </v-btn>
-      <!-- <v-btn fab dark small color="green" @click="addEmployee">
-        <v-icon>add</v-icon>
-      </v-btn> -->
+      <v-btn fab dark small color="green" @click="saveWorkDay">
+        <v-icon>check</v-icon>
+      </v-btn>
       <v-btn fab dark small color="blue" @click.stop="showModal=true">
         <v-icon>person_add</v-icon>
       </v-btn>
@@ -100,10 +100,14 @@ export default {
       })
     },
     saveWorkDay: function () {
-      db.collection('completedDays').set({
+      db.collection('completedDays').add({
         date: new Date(),
         employees: this.workDayEmployeeInfoList
-      }).then()
+      }).then(() => {
+        this.showSnackbar = true
+        this.snackbarText = 'Employee Successfully Added!'
+        }
+      )
     }
   },
   computed: {

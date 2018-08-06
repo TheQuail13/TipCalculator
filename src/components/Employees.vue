@@ -7,12 +7,12 @@
                     <v-text-field v-model="employee.name" label="Name" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs4>
-                    <v-text-field v-model.number="employee.hours" @change="updateEmployeeData(employee.hours, index)" label="Hours" clearable></v-text-field>
+                    <v-text-field v-model.number="employee.hours" @change="updateEmployeeData(index)" label="Hours" clearable></v-text-field>
                 </v-flex>
                 <v-flex xs3>
                     <p><strong>Tips: {{formatAsCurrency(employee.tips)}}</strong></p>
                 </v-flex>
-                <v-btn class="button-override" fab dark small color="pink" @click="deleteUser(index)">
+                <v-btn class="button-override" fab dark small color="pink" @click="removeUser(index)">
                     <v-icon dark>remove</v-icon>
                 </v-btn>
             </v-layout>
@@ -30,8 +30,7 @@ export default {
                 this.employee.tips = (employeesHours/totalHours) * totalTips
             }
         },
-        updateEmployeeData(employee, index) {      
-            console.log(this.employee)
+        updateEmployeeData(index) {      
             this.$store.state.workDayEmployeeInfoList.splice(index, 1, this.employee)
             this.calculateTipsPerEmployee(this.employee.hours, this.$store.getters.totalHours, this.$store.state.totalTips)
         },
@@ -44,7 +43,7 @@ export default {
 
             return formatter.format(value)
         },
-        deleteUser (index) {
+        removeUser (index) {
             this.$store.state.workDayEmployeeInfoList.splice(index, 1)
         }
     },

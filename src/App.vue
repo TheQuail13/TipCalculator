@@ -7,7 +7,9 @@
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+            <router-link class="link" :to="item.link">
+              <v-list-tile-title v-text="item.title"></v-list-tile-title>
+            </router-link>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -23,22 +25,75 @@
 </template>
 
 <script>
+import db from './firebaseInit.js'
+
 export default {
+  name: 'App',
   data () {
     return {
       clipped: true,
       drawer: false,
-      fixed: false,
       items: [{
-        icon: 'bubble_chart',
-        title: 'History'
-      }],
+        icon: 'history',
+        title: 'History',
+        link: '/history'
+        },
+        {
+        icon: 'people',
+        title: 'Employee Management',
+        link: '/employeeManagement'
+        }],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Just The Tip'
+      title: 'Just The Tip',
+      employeeObject: {
+        name: '',
+        hours: 0,
+        tips: 0,
+        isDeleted: false,
+        firestoreDocId: ''
+      }
     }
   },
-  name: 'App'
+  methods: {
+    getEmployeeList: function () {
+      // clear array
+      this.workDayEmployeeInfoList.length = 0
+
+      // get data from Firestore and populate store
+      db.collection('employees').get().then((query) => {
+        query.forEach((doc) => {
+          this.employeeObject = {
+            name: doc.data().name,
+            isDeleted: doc.data().isDeleted,
+            hours: 0,
+            tips: 0,
+            firestoreDocId: doc.id
+          }
+          
+          this.$store.commit('setEmployees', doc.data())
+          this.$store.commit('setWorkDayEmployeeInfoList', this.employeeObject)
+        })
+      })
+    }
+  },
+  computed: {
+    workDayEmployeeInfoList: {
+      get () {
+        return this.$store.state.workDayEmployeeInfoList
+      },
+      set (value) {
+        this.$store.commit('setWorkDayEmployeeInfoList', value)
+      }
+    },
+  },
+  created() {
+    this.getEmployeeList()
+  }
 }
 </script>
+
+<style scoped>
+  .link {
+    text-decoration-line: none;
+  }
+</style>

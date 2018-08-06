@@ -17,8 +17,8 @@
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
-    <v-snackbar v-model="showSnackbar" :timeout="2000" color="success" top>{{ snackbarText }}</v-snackbar>
-    <v-speed-dial fixed bottom left slide-y-reverse-transition>
+    
+    <!-- <v-speed-dial fixed bottom left slide-y-reverse-transition>
       <v-btn slot="activator" color="blue darken-2" dark fab>
         <v-icon>add</v-icon>
         <v-icon>close</v-icon>
@@ -29,32 +29,22 @@
       <v-btn fab dark small color="blue" @click.stop="showModal=true">
         <v-icon>person_add</v-icon>
       </v-btn>
-    </v-speed-dial>
-    <add-user-modal :visible="showModal" @closeModal="showModal=false" @addEmployee="addEmployee"></add-user-modal>
+    </v-speed-dial> -->
+    
   </v-container>
 </template>
 
 <script>
 import Employees from '@/components/Employees'
-import AddUserModal from '@/components/AddUserModal'
 import { mapGetters } from 'vuex'
 import db from '../firebaseInit.js'
 
 export default {
   components: {
-    Employees,
-    AddUserModal
+    Employees
   },
   data () {
     return {
-      showModal: false,
-      showSnackbar: false,
-      snackbarText: '',
-      employeeObject: {
-        name: '',
-        hours: 0,
-        tips: 0
-      }
     }
   },
   methods: {
@@ -64,18 +54,6 @@ export default {
               this.workDayEmployeeInfoList[i].tips = (this.workDayEmployeeInfoList[i].hours/this.totalHours) * this.totalTips
           }
       }
-    },
-    addEmployee: function (name) {
-      var newId = this.maxEmployeeId + 1
-
-      db.collection('employees').add({
-        id: newId,
-        name: name
-      }).then(() => {
-        this.showSnackbar = true
-        this.snackbarText = 'Employee Successfully Added!'
-        this.getEmployeeList()
-      })
     },
     deleteEmployee: function () {
       // logic here
@@ -103,7 +81,7 @@ export default {
         employees: this.workDayEmployeeInfoList
       }).then(() => {
         this.showSnackbar = true
-        this.snackbarText = 'Employee Successfully Added!'
+        this.snackbarText = 'Workday Successfully Saved!'
         }
       )
     }
@@ -123,7 +101,7 @@ export default {
       },
       set (value) {
         this.$store.commit('setEmployees', value)
-      },
+      }
     },
     workDayEmployeeInfoList: {
       get () {
@@ -131,7 +109,7 @@ export default {
       },
       set (value) {
         this.$store.commit('setWorkDayEmployeeInfoList', value)
-      },
+      }
     },
     ...mapGetters([
       'totalHours',
@@ -158,9 +136,9 @@ export default {
       deep: true
     }
   },
-  created() {
-    this.getEmployeeList()
-  }
+  // created() {
+  //   this.getEmployeeList()
+  // }
 }
 </script>
 

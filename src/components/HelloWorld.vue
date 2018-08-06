@@ -55,26 +55,6 @@ export default {
           }
       }
     },
-    deleteEmployee: function () {
-      // logic here
-    },
-    getEmployeeList: function () {
-      // clear array
-      this.workDayEmployeeInfoList.length = 0
-
-      // get data from Firestore and populate store
-      db.collection('employees').get().then((query) => {
-        query.forEach((doc) => {
-          this.employeeObject = {
-            name: doc.data().name,
-            hours: 0,
-            tips: 0
-          }
-          this.$store.commit('setEmployees', doc.data())
-          this.$store.commit('setWorkDayEmployeeInfoList', this.employeeObject)
-        })
-      })
-    },
     saveWorkDay: function () {
       db.collection('completedDays').add({
         date: new Date(),

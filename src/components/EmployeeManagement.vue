@@ -27,7 +27,7 @@
             </v-container>
         </v-card>
 
-        <v-snackbar v-model="showSnackbar" :timeout="2000" color="success" top>{{ snackbarText }}</v-snackbar>
+        <v-snackbar v-model="showSnackbar" :timeout="1500" color="success" top>{{ snackbarText }}</v-snackbar>
         <add-employee-modal :visible="showModal" @closeModal="showModal=false" @addEmployee="addEmployee"></add-employee-modal>
     </v-container>
 </template>
@@ -46,6 +46,18 @@ export default {
             showModal: false,
             showSnackbar: false,
             snackbarText: '',
+            employeeInfoObject: {
+                name: '',
+                hours: 0,
+                tips: 0,
+                isDeleted: false
+            },
+            employeeObject: {
+                name: '',
+                id: 0,
+                isDeleted: false,
+                firestoreDocId: ''
+            }
         }
     },
     methods: {
@@ -57,18 +69,48 @@ export default {
                 name: name
             }).then(() => {
                 this.showSnackbar = true
-                this.snackbarText = 'Employee Successfully Added!'
+                this.snackbarText = 'Employee Added!'
                 this.getEmployeeList()
             })
         },
         softDeleteEmployee: function (employee, index) {
-            console.log(employee)
             employee.isDeleted = true
-            this.$store.state.workDayEmployeeInfoList.splice(index, 1, employee)
+
+            // update firestore
+            db.collection('employees').doc(employee.firestoreDocId.toString()).update({
+                isDeleted: true
+            }).then(() => {
+                this.showSnackbar = true
+                this.snackbarText = 'Employee Deleted.'
+            })
         },
-        ...mapGetters([
-            'maxEmployeeId'
-        ])
+        getEmployeeList: function () {
+            // clear array
+            this.workDayEmployeeInfoList.length = 0
+            this.employees.length = 0
+
+            // get data from Firestore and populate store
+            db.collection('employees').get().then((query) => {
+                query.forEach((doc) => {
+                this.employeeInfoObject = {
+                    name: doc.data().name,
+                    isDeleted: doc.data().isDeleted,
+                    hours: 0,
+                    tips: 0
+                }
+
+                this.employeeObject = {
+                    name: doc.data().name,
+                    id: doc.data().id,
+                    isDeleted: doc.data().isDeleted,
+                    firestoreDocId: doc.id
+                }
+
+                this.$store.commit('setEmployees', this.employeeObject)
+                this.$store.commit('setWorkDayEmployeeInfoList', this.employeeInfoObject)
+                })
+            })
+        }
     },
     computed: {
         employees: {
@@ -77,6 +119,14 @@ export default {
             },
             set (value) {
                 this.$store.commit('setEmployees', value)
+            }
+        },
+        workDayEmployeeInfoList: {
+            get () {
+                return this.$store.state.workDayEmployeeInfoList
+            },
+            set (value) {
+                this.$store.commit('setWorkDayEmployeeInfoList', value)
             }
         },
         binding () {
@@ -91,7 +141,10 @@ export default {
             }
 
             return binding
-        }
+        },
+        ...mapGetters([
+            'maxEmployeeId'
+        ])
     }
 }
 </script>

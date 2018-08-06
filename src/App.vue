@@ -45,10 +45,15 @@ export default {
         }],
       miniVariant: false,
       title: 'Just The Tip',
-      employeeObject: {
+      employeeInfoObject: {
         name: '',
         hours: 0,
         tips: 0,
+        isDeleted: false
+      },
+      employeeObject: {
+        name: '',
+        id: 0,
         isDeleted: false,
         firestoreDocId: ''
       }
@@ -62,16 +67,22 @@ export default {
       // get data from Firestore and populate store
       db.collection('employees').get().then((query) => {
         query.forEach((doc) => {
-          this.employeeObject = {
+          this.employeeInfoObject = {
             name: doc.data().name,
             isDeleted: doc.data().isDeleted,
             hours: 0,
-            tips: 0,
+            tips: 0
+          }
+
+          this.employeeObject = {
+            name: doc.data().name,
+            id: doc.data().id,
+            isDeleted: doc.data().isDeleted,
             firestoreDocId: doc.id
           }
-          
-          this.$store.commit('setEmployees', doc.data())
-          this.$store.commit('setWorkDayEmployeeInfoList', this.employeeObject)
+
+          this.$store.commit('setEmployees', this.employeeObject)
+          this.$store.commit('setWorkDayEmployeeInfoList', this.employeeInfoObject)
         })
       })
     }

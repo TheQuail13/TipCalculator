@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import EmployeeManagement from '@/components/EmployeeManagement'
+import History from '@/components/History'
 
 Vue.use(Router)
 
@@ -20,7 +21,7 @@ export default new Router({
     {
       path: '/history',
       name: 'History',
-      component: EmployeeManagement
+      component: History
     }
   ]
 })

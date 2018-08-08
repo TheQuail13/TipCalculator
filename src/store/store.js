@@ -7,7 +7,8 @@ const store = new Vuex.Store({
     state: {
         totalTips: 150,
         employees: [],
-        workDayEmployeeInfoList: []
+        workDayEmployeeInfoList: [],
+        completedDays: []
     },
     getters: {
         totalHours (state) {
@@ -33,6 +34,9 @@ const store = new Vuex.Store({
         },
         setWorkDayEmployeeInfoList (state, payload) {
             state.workDayEmployeeInfoList.push(payload)
+        },
+        setCompletedDays (state, payload) {
+            state.completedDays.push(payload)
         }
     }
 })

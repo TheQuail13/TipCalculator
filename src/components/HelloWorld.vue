@@ -13,7 +13,7 @@
           </v-flex>
         </v-layout>
         <v-flex>
-          <Employees v-for="(employee, index) in this.workDayEmployeeInfoList" :key="index" :employee="employee" :index="index"></Employees>
+          <Employees v-for="(employee, index) in this.workDayEmployeeInfoList" :key="index" :employee="employee" :index="index" v-if="!employee.isDeleted"></Employees>
         </v-flex>
       </v-layout>
     </v-slide-y-transition>
